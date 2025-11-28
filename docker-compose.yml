@@ -4,16 +4,16 @@ services:
   postgres:
     image: postgres:13
     environment:
-      POSTGRES_DB: deleginsumos
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
+      POSTGRES_DB: deleg
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     # Añadir healthcheck para que los MS esperen por la DB
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U user -d deleginsumos"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d deleg"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -32,43 +32,34 @@ services:
   ms-inventario:
     build: ./ms-inventario
     ports:
-      - "8001:8000" # Mapeado correctamente (externo:interno)
+      - "8001:8001" # Mapeado correctamente (externo:interno)
     depends_on:
       postgres:
         condition: service_healthy # Espera a que Postgres esté sano
-      rabbitmq:
-        condition: service_healthy # Espera a que RabbitMQ esté sano
     environment:
-      DATABASE_URL: postgresql://user:password@postgres/deleginsumos
+      DATABASE_URL: postgresql://postgres:postgres@postgres/deleg
       RABBITMQ_URL: amqp://guest:guest@rabbitmq/
-      PYTHONPATH: /app/src # <--- SOLUCIÓN AL ModuleNotFoundError
 
   ms-rrhh:
     build: ./ms-rrhh
     ports:
-      - "8003:8000" # Mapeado correctamente (externo:interno)
+      - "8003:8003" # Mapeado correctamente (externo:interno)
     depends_on:
       postgres:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy # Añadido por si se usa en el futuro
     environment:
-      DATABASE_URL: postgresql://user:password@postgres/deleginsumos
-      PYTHONPATH: /app/src # <--- SOLUCIÓN AL ModuleNotFoundError
+      DATABASE_URL: postgresql://postgres:postgres@postgres/deleg
 
   ms-distribucion:
     build: ./ms-distribucion
     ports:
-      - "8002:8000" # Mapeado correctamente (externo:interno)
+      - "8002:8002" # Mapeado correctamente (externo:interno)
     depends_on:
       postgres:
         condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://user:password@postgres/deleginsumos
+      DATABASE_URL: postgresql://postgres:postgres@postgres/deleg
       RABBITMQ_URL: amqp://guest:guest@rabbitmq/
-      PYTHONPATH: /app/src # <--- SOLUCIÓN AL ModuleNotFoundError
 
   ms-gateway:
     build: ./ms-gateway

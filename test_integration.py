@@ -1,45 +1,57 @@
-import requests
-import time
+import asyncio
+import httpx
 import uuid
 
-def test_integration():
-    insumo_id = str(uuid.uuid4())
-    empleado_id = str(uuid.uuid4())
-    entrega_id = str(uuid.uuid4())
+async def test_integration():
+    async with httpx.AsyncClient() as client:
+        insumo_id = str(uuid.uuid4())
+        empleado_id = str(uuid.uuid4())
+        entrega_id = str(uuid.uuid4())
 
-    # Health checks
-    services = [8000, 8001, 8002, 8003]
-    for port in services:
-        response = requests.get(f"http://localhost:{port}/health")
+        # Health check gateway
+        response = await client.get("http://localhost:8000/")
         assert response.status_code == 200
-        assert response.json()["status"] == "ok"
 
-    # Create insumo (mock, since no POST endpoint yet)
-    # Assume insumo created with stock 10 via direct DB or mock
+        # Create empleado
+        response = await client.post("http://localhost:8000/rrhh/empleados", json={
+            "cedula": "123456789",
+            "estado": "activo"
+        })
+        assert response.status_code == 200
 
-    # Solicitar entrega
-    response = requests.post("http://localhost:8003/api/v1/entregas", json={
-        "id": entrega_id,
-        "empleado_id": empleado_id,
-        "insumo_id": insumo_id,
-        "cantidad": 5
-    })
-    assert response.status_code == 200
+        # Create insumo
+        response = await client.post("http://localhost:8000/inventario/insumos", json={
+            "nombre": "Test Insumo",
+            "categoria": "Test",
+            "stock_actual": 10,
+            "stock_min": 5,
+            "stock_max": 20
+        })
+        assert response.status_code == 200
 
-    # Wait for async processing
-    time.sleep(10)
+        # Create entrega
+        response = await client.post("http://localhost:8000/distribucion/entregas", json={
+            "empleado_id": empleado_id,
+            "insumo_id": insumo_id,
+            "cantidad": 5
+        })
+        assert response.status_code == 200
 
-    # Check stock in ms-inventario
-    response = requests.get(f"http://localhost:8001/api/v1/insumos/{insumo_id}")
-    data = response.json()
-    assert data["stock_actual"] == 5
+        # Confirm entrega
+        response = await client.post(f"http://localhost:8000/distribucion/entregas/{entrega_id}/confirmar")
+        assert response.status_code == 200
 
-    # Check entrega status
-    response = requests.get(f"http://localhost:8003/api/v1/entregas/{entrega_id}")
-    data = response.json()
-    assert data["estado"] == "CONFIRMADA"
+        # Check stock updated
+        response = await client.get(f"http://localhost:8000/inventario/insumos/{insumo_id}")
+        data = response.json()
+        assert data["stock"]["actual"] == 5
 
-    print("Integration test passed")
+        # Check entrega confirmed
+        response = await client.get(f"http://localhost:8000/distribucion/entregas/{entrega_id}")
+        data = response.json()
+        assert data["estado"] == "CONFIRMADA"
+
+        print("Integration test passed")
 
 if __name__ == "__main__":
-    test_integration()
+    asyncio.run(test_integration())

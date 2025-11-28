@@ -1,8 +1,6 @@
 from sqlalchemy import Column, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from .session import Base
 
 class EmpleadoModel(Base):
     __tablename__ = "empleados"

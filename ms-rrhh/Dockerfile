@@ -8,6 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8002
+EXPOSE 8003
 
-CMD ["python", "src/main.py"]
+CMD ["sh", "-c", "PYTHONPATH=/app/src python src/init_db.py && uvicorn src.main:app --host 0.0.0.0 --port 8003"]

@@ -1,4 +1,5 @@
 from uuid import UUID
+from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -14,8 +15,8 @@ class SQLAlchemyInsumoRepository(InsumoRepository):
     def save(self, insumo: Insumo) -> None:
         model = InsumoModel(
             id=insumo.id,
-            nombre=insumo.nombre.value,
-            categoria=insumo.categoria.value,
+            nombre=insumo.nombre,
+            categoria=insumo.categoria,
             stock_actual=insumo.stock.actual,
             stock_min=insumo.stock.min,
             stock_max=insumo.stock.max
@@ -31,3 +32,31 @@ class SQLAlchemyInsumoRepository(InsumoRepository):
         categoria = Categoria(model.categoria)
         stock = CantidadStock(model.stock_actual, model.stock_min, model.stock_max)
         return Insumo(model.id, nombre, categoria, stock)
+
+    def get_all(self) -> List[Insumo]:
+        models = self.session.query(InsumoModel).all()
+        insumos = []
+        for model in models:
+            nombre = Nombre(model.nombre)
+            categoria = Categoria(model.categoria)
+            stock = CantidadStock(model.stock_actual, model.stock_min, model.stock_max)
+            insumos.append(Insumo(model.id, nombre, categoria, stock))
+        return insumos
+
+    def update(self, insumo: Insumo) -> None:
+        model = self.session.query(InsumoModel).filter_by(id=insumo.id).first()
+        if not model:
+            raise ValueError("Insumo not found")
+        model.nombre = insumo.nombre
+        model.categoria = insumo.categoria
+        model.stock_actual = insumo.stock.actual
+        model.stock_min = insumo.stock.min
+        model.stock_max = insumo.stock.max
+        self.session.commit()
+
+    def delete(self, id_: UUID) -> None:
+        model = self.session.query(InsumoModel).filter_by(id=id_).first()
+        if not model:
+            raise ValueError("Insumo not found")
+        self.session.delete(model)
+        self.session.commit()

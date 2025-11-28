@@ -1,14 +1,14 @@
-from typing import NamedTuple
+from dataclasses import dataclass
 
-class CantidadStock(NamedTuple):
+@dataclass(frozen=True)
+class CantidadStock:
     actual: int
     min: int
     max: int
 
-    def __new__(cls, actual: int, min_: int, max_: int):
-        if actual < 0 or min_ < 0 or max_ < 0:
+    def __post_init__(self):
+        if self.actual < 0 or self.min < 0 or self.max < 0:
             raise ValueError("Stocks cannot be negative")
-        return super().__new__(cls, actual, min_, max_)
 
 class Nombre(str):
     def __new__(cls, value: str):

@@ -11,6 +11,15 @@ class SQLAlchemyEmpleadoRepository(EmpleadoRepository):
     def __init__(self, session: Session):
         self.session = session
 
+    def save(self, empleado: Empleado) -> None:
+        model = EmpleadoModel(
+            id=empleado.id,
+            cedula=empleado.cedula,
+            estado=empleado.estado
+        )
+        self.session.merge(model)
+        self.session.commit()
+
     def get_by_id(self, id_: UUID) -> Empleado:
         model = self.session.query(EmpleadoModel).filter_by(id=id_).first()
         if not model:
@@ -27,3 +36,18 @@ class SQLAlchemyEmpleadoRepository(EmpleadoRepository):
             estado = EstadoEmpleado(model.estado)
             empleados.append(Empleado(model.id, cedula, estado))
         return empleados
+
+    def update(self, empleado: Empleado) -> None:
+        model = self.session.query(EmpleadoModel).filter_by(id=empleado.id).first()
+        if not model:
+            raise ValueError("Empleado not found")
+        model.cedula = empleado.cedula
+        model.estado = empleado.estado
+        self.session.commit()
+
+    def delete(self, id_: UUID) -> None:
+        model = self.session.query(EmpleadoModel).filter_by(id=id_).first()
+        if not model:
+            raise ValueError("Empleado not found")
+        self.session.delete(model)
+        self.session.commit()

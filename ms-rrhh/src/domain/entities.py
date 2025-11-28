@@ -1,10 +1,10 @@
-from uuid import UUID
+from uuid import uuid4
 
 from .value_objects import Cedula, EstadoEmpleado
 
 class Empleado:
-    def __init__(self, id_: UUID, cedula: Cedula, estado: EstadoEmpleado):
-        self.id = id_
+    def __init__(self, cedula: Cedula, estado: EstadoEmpleado):
+        self.id = uuid4()
         self.cedula = cedula
         self.estado = estado
 

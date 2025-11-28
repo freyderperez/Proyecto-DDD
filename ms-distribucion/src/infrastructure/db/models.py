@@ -1,8 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from .session import Base
 
 class EntregaModel(Base):
     __tablename__ = "entregas"

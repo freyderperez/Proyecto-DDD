@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8001
 
-CMD ["python", "src/main.py"]
+CMD ["sh", "-c", "PYTHONPATH=/app/src python src/init_db.py && uvicorn src.main:app --host 0.0.0.0 --port 8001"]

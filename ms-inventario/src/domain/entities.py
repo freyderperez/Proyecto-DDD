@@ -1,10 +1,10 @@
-from uuid import UUID
+from uuid import uuid4
 
 from .value_objects import CantidadStock, Nombre, Categoria
 
 class Insumo:
-    def __init__(self, id_: UUID, nombre: Nombre, categoria: Categoria, stock: CantidadStock):
-        self.id = id_
+    def __init__(self, nombre: Nombre, categoria: Categoria, stock: CantidadStock):
+        self.id = uuid4()
         self.nombre = nombre
         self.categoria = categoria
         self.stock = stock

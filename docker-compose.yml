@@ -11,48 +11,71 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    # Añadir healthcheck para que los MS esperen por la DB
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d deleginsumos"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672"
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_listening"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   ms-inventario:
     build: ./ms-inventario
     ports:
-      - "8001:8001"
+      - "8001:8000" # Mapeado correctamente (externo:interno)
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy # Espera a que Postgres esté sano
+      rabbitmq:
+        condition: service_healthy # Espera a que RabbitMQ esté sano
     environment:
       DATABASE_URL: postgresql://user:password@postgres/deleginsumos
       RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+      PYTHONPATH: /app/src # <--- SOLUCIÓN AL ModuleNotFoundError
 
   ms-rrhh:
     build: ./ms-rrhh
     ports:
-      - "8003:8003"
+      - "8003:8000" # Mapeado correctamente (externo:interno)
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy # Añadido por si se usa en el futuro
     environment:
       DATABASE_URL: postgresql://user:password@postgres/deleginsumos
+      PYTHONPATH: /app/src # <--- SOLUCIÓN AL ModuleNotFoundError
 
   ms-distribucion:
     build: ./ms-distribucion
     ports:
-      - "8002:8002"
+      - "8002:8000" # Mapeado correctamente (externo:interno)
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://user:password@postgres/deleginsumos
       RABBITMQ_URL: amqp://guest:guest@rabbitmq/
+      PYTHONPATH: /app/src # <--- SOLUCIÓN AL ModuleNotFoundError
 
   ms-gateway:
     build: ./ms-gateway
     ports:
       - "8000:8000"
+    # El gateway solo depende de que los MS hayan terminado de construir.
+    # No necesita esperar por el healthcheck de la DB.
     depends_on:
       - ms-inventario
       - ms-rrhh

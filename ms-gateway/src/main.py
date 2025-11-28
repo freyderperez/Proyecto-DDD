@@ -1,9 +1,15 @@
 from fastapi import FastAPI, Request, Response
 import httpx
+from contextlib import asynccontextmanager
 
-app = FastAPI(title="API Gateway DelegInsumos")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global client
+    client = httpx.AsyncClient()
+    yield
+    await client.aclose()
 
-client = httpx.AsyncClient()
+app = FastAPI(title="API Gateway DelegInsumos", lifespan=lifespan)
 
 @app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
 async def proxy(request: Request, path: str):
@@ -17,13 +23,16 @@ async def proxy(request: Request, path: str):
         return Response(status_code=404, content="Not found")
 
     body = await request.body()
-    response = await client.request(
-        method=request.method,
-        url=url,
-        headers=dict(request.headers),
-        content=body,
-        params=request.query_params
-    )
+    try:
+        response = await client.request(
+            method=request.method,
+            url=url,
+            headers=dict(request.headers),
+            content=body,
+            params=request.query_params
+        )
+    except httpx.RequestError:
+        return Response(status_code=502, content="Bad Gateway")
     return Response(
         status_code=response.status_code,
         content=response.content,

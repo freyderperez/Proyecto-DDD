@@ -28,7 +28,7 @@ class SQLAlchemyEntregaRepository(EntregaRepository):
             raise ValueError("Entrega not found")
         cantidad = CantidadSolicitada(model.cantidad)
         estado = EstadoEntrega(model.estado)
-        return Entrega(model.id, model.empleado_id, model.insumo_id, cantidad, estado)
+        return Entrega(model.empleado_id, model.insumo_id, cantidad, estado, model.id)
 
     def get_all(self) -> List[Entrega]:
         models = self.session.query(EntregaModel).all()
@@ -36,7 +36,7 @@ class SQLAlchemyEntregaRepository(EntregaRepository):
         for model in models:
             cantidad = CantidadSolicitada(model.cantidad)
             estado = EstadoEntrega(model.estado)
-            entregas.append(Entrega(model.id, model.empleado_id, model.insumo_id, cantidad, estado))
+            entregas.append(Entrega(model.empleado_id, model.insumo_id, cantidad, estado, model.id))
         return entregas
 
     def update(self, entrega: Entrega) -> None:

@@ -31,7 +31,7 @@ class SQLAlchemyInsumoRepository(InsumoRepository):
         nombre = Nombre(model.nombre)
         categoria = Categoria(model.categoria)
         stock = CantidadStock(model.stock_actual, model.stock_min, model.stock_max)
-        return Insumo(model.id, nombre, categoria, stock)
+        return Insumo(nombre, categoria, stock, model.id)
 
     def get_all(self) -> List[Insumo]:
         models = self.session.query(InsumoModel).all()
@@ -40,7 +40,7 @@ class SQLAlchemyInsumoRepository(InsumoRepository):
             nombre = Nombre(model.nombre)
             categoria = Categoria(model.categoria)
             stock = CantidadStock(model.stock_actual, model.stock_min, model.stock_max)
-            insumos.append(Insumo(model.id, nombre, categoria, stock))
+            insumos.append(Insumo(nombre, categoria, stock, model.id))
         return insumos
 
     def update(self, insumo: Insumo) -> None:

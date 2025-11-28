@@ -24,11 +24,16 @@ def create_empleado(request: EmpleadoCreate, db: Session = Depends(get_db)):
     repo = SQLAlchemyEmpleadoRepository(db)
     use_case = RegistrarEmpleado(repo)
     try:
-        empleado = use_case.execute(request.cedula, request.estado)
+        empleado = use_case.execute(request.cedula, request.estado, request.nombre_completo, request.cargo, request.departamento, request.email, request.telefono)
         return EmpleadoResponse(
             id=str(empleado.id),
             cedula=empleado.cedula,
-            estado=empleado.estado
+            estado=empleado.estado,
+            nombre_completo=empleado.nombre_completo,
+            cargo=empleado.cargo,
+            departamento=empleado.departamento,
+            email=empleado.email,
+            telefono=empleado.telefono
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -42,7 +47,12 @@ def list_empleados(db: Session = Depends(get_db)):
         EmpleadoResponse(
             id=str(e.id),
             cedula=e.cedula,
-            estado=e.estado
+            estado=e.estado,
+            nombre_completo=e.nombre_completo,
+            cargo=e.cargo,
+            departamento=e.departamento,
+            email=e.email,
+            telefono=e.telefono
         )
         for e in empleados
     ]
@@ -56,7 +66,12 @@ def get_empleado(id: str, db: Session = Depends(get_db)):
         return EmpleadoResponse(
             id=str(empleado.id),
             cedula=empleado.cedula,
-            estado=empleado.estado
+            estado=empleado.estado,
+            nombre_completo=empleado.nombre_completo,
+            cargo=empleado.cargo,
+            departamento=empleado.departamento,
+            email=empleado.email,
+            telefono=empleado.telefono
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -66,11 +81,16 @@ def update_empleado(id: str, request: EmpleadoUpdate, db: Session = Depends(get_
     repo = SQLAlchemyEmpleadoRepository(db)
     use_case = ActualizarEmpleado(repo)
     try:
-        empleado = use_case.execute(UUID(id), request.cedula, request.estado)
+        empleado = use_case.execute(UUID(id), request.cedula, request.estado, request.nombre_completo, request.cargo, request.departamento, request.email, request.telefono)
         return EmpleadoResponse(
             id=str(empleado.id),
             cedula=empleado.cedula,
-            estado=empleado.estado
+            estado=empleado.estado,
+            nombre_completo=empleado.nombre_completo,
+            cargo=empleado.cargo,
+            departamento=empleado.departamento,
+            email=empleado.email,
+            telefono=empleado.telefono
         )
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))

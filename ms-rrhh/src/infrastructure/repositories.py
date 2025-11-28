@@ -15,7 +15,12 @@ class SQLAlchemyEmpleadoRepository(EmpleadoRepository):
         model = EmpleadoModel(
             id=empleado.id,
             cedula=empleado.cedula,
-            estado=empleado.estado
+            estado=empleado.estado,
+            nombre_completo=empleado.nombre_completo,
+            cargo=empleado.cargo,
+            departamento=empleado.departamento,
+            email=empleado.email,
+            telefono=empleado.telefono
         )
         self.session.merge(model)
         self.session.commit()
@@ -26,7 +31,7 @@ class SQLAlchemyEmpleadoRepository(EmpleadoRepository):
             raise ValueError("Empleado not found")
         cedula = Cedula(model.cedula)
         estado = EstadoEmpleado(model.estado)
-        return Empleado(model.id, cedula, estado)
+        return Empleado(cedula, estado, model.nombre_completo, model.cargo, model.departamento, model.email, model.telefono, model.id)
 
     def get_all(self) -> List[Empleado]:
         models = self.session.query(EmpleadoModel).all()
@@ -34,7 +39,7 @@ class SQLAlchemyEmpleadoRepository(EmpleadoRepository):
         for model in models:
             cedula = Cedula(model.cedula)
             estado = EstadoEmpleado(model.estado)
-            empleados.append(Empleado(model.id, cedula, estado))
+            empleados.append(Empleado(cedula, estado, model.nombre_completo, model.cargo, model.departamento, model.email, model.telefono, model.id))
         return empleados
 
     def update(self, empleado: Empleado) -> None:
@@ -43,6 +48,11 @@ class SQLAlchemyEmpleadoRepository(EmpleadoRepository):
             raise ValueError("Empleado not found")
         model.cedula = empleado.cedula
         model.estado = empleado.estado
+        model.nombre_completo = empleado.nombre_completo
+        model.cargo = empleado.cargo
+        model.departamento = empleado.departamento
+        model.email = empleado.email
+        model.telefono = empleado.telefono
         self.session.commit()
 
     def delete(self, id_: UUID) -> None:

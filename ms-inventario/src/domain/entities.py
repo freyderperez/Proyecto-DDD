@@ -3,8 +3,8 @@ from uuid import uuid4
 from .value_objects import CantidadStock, Nombre, Categoria
 
 class Insumo:
-    def __init__(self, nombre: Nombre, categoria: Categoria, stock: CantidadStock):
-        self.id = uuid4()
+    def __init__(self, nombre: Nombre, categoria: Categoria, stock: CantidadStock, id=None):
+        self.id = id if id is not None else uuid4()
         self.nombre = nombre
         self.categoria = categoria
         self.stock = stock

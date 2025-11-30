@@ -1,7 +1,16 @@
 from fastapi import FastAPI, Request, Response
 import httpx
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="API Gateway DelegInsumos")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 🔥 HEALTHCHECK debe ir ANTES del proxy para no ser sobrescrito
 @app.get("/")
@@ -34,8 +43,11 @@ async def health_distribucion():
 
 client = httpx.AsyncClient()
 
-@app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH"])
+@app.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"])
 async def proxy(request: Request, path: str):
+    if request.method == "OPTIONS":
+        return Response(status_code=200)
+
     # Rutas por prefijo
     if path.startswith("inventario/"):
         url = f"http://ms-inventario:8001/{path}"

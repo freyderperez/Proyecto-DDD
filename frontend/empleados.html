@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empleados - Sistema DDD</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="insumos.html">Insumos</a></li>
+      <li><a href="empleados.html">Empleados</a></li>
+      <li><a href="entregas.html">Entregas</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Empleados</h1>
+    <button class="btn" onclick="openCreateModal()">Crear Empleado</button>
+    <div class="table-container">
+      <table id="empleadosTable">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Cédula</th>
+          <th>Estado</th>
+          <th>Nombre Completo</th>
+          <th>Cargo</th>
+          <th>Departamento</th>
+          <th>Email</th>
+          <th>Teléfono</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="empleadosBody">
+        <!-- Datos se cargarán aquí -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modal para crear/editar -->
+  <div id="empleadoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2 id="modalTitle">Crear Empleado</h2>
+      <form id="empleadoForm">
+        <div class="form-group">
+          <label for="cedula">Cédula:</label>
+          <input type="text" id="cedula" required>
+        </div>
+        <div class="form-group">
+          <label for="estado">Estado:</label>
+          <select id="estado" required>
+            <option value="">Seleccionar Estado</option>
+            <option value="Activo">Activo</option>
+            <option value="Inactivo">Inactivo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="nombre_completo">Nombre Completo:</label>
+          <input type="text" id="nombre_completo" required>
+        </div>
+        <div class="form-group">
+          <label for="cargo">Cargo:</label>
+          <input type="text" id="cargo" required>
+        </div>
+        <div class="form-group">
+          <label for="departamento">Departamento:</label>
+          <input type="text" id="departamento" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" required>
+        </div>
+        <div class="form-group">
+          <label for="telefono">Teléfono:</label>
+          <input type="text" id="telefono" required>
+        </div>
+        <button type="submit" class="btn">Guardar</button>
+        <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="js/api.js"></script>
+  <script src="js/empleados.js"></script>
+</body>
+</html>

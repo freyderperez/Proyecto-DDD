@@ -72,5 +72,12 @@ services:
       - ms-rrhh
       - ms-distribucion
 
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - ms-gateway
+
 volumes:
   postgres_data:

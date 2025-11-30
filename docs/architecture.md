@@ -68,10 +68,10 @@ This architecture aligns with the subdomain classifications, treating inventory 
 
 ```mermaid
 graph TD
-    A[ms-inventario] -->|StockReservado/FalloSinStock| B[ms-distribucion]
-    B -->|EntregaSolicitada| A
-    C[ms-rrhh] -->|Empleado data| B
-    B -->|EntregaConfirmada| A
+A[ms-inventario] -->|StockReservado/FalloSinStock| B[ms-distribucion]
+B -->|EntregaSolicitada| A
+C[ms-rrhh] -->|Empleado data| B
+B -->|EntregaConfirmada| A
 ```
 
 ## Topología de Eventos JSON
@@ -79,28 +79,28 @@ graph TD
 ### EntregaRegistrada
 ```json
 {
-  "entrega_id": "uuid",
-  "empleado_id": "uuid",
-  "insumo_id": "uuid",
-  "cantidad": 5
+"entrega_id": "uuid",
+"empleado_id": "uuid",
+"insumo_id": "uuid",
+"cantidad": 5
 }
 ```
 
 ### StockDescontado
 ```json
 {
-  "insumo_id": "uuid",
-  "cantidad_descontada": 5,
-  "stock_actual": 5
+"insumo_id": "uuid",
+"cantidad_descontada": 5,
+"stock_actual": 5
 }
 ```
 
 ### AlertaStockCritico
 ```json
 {
-  "insumo_id": "uuid",
-  "tipo": "agotado|bajo|exceso",
-  "stock_actual": 0
+"insumo_id": "uuid",
+"tipo": "agotado|bajo|exceso",
+"stock_actual": 0
 }
 
 ## Data Model Diagrams
@@ -122,3 +122,57 @@ graph TD
 | Table    | Attributes |
 |----------|------------|
 | Empleado | id (UUID), cedula (string), estado (string) |
+
+## Comunicación de Microservicios
+
+- **ms-distribucion** se suscribe a los eventos **StockDescontado** y **AlertaStockCritico** de **ms-inventario**
+- **ms-distribucion** publica los eventos **EntregaRegistrada** en **ms-inventario**
+- **ms-distribucion** consulta los datos de los empleados en **ms-rrhh**
+- **ms-distribucion** publica los eventos **EntregaConfirmada** en **ms-inventario**
+
+## Flujo de Eventos
+
+1. **ms-distribucion** publica el evento **EntregaRegistrada** en **ms-inventario**
+2. **ms-inventario** procesa el evento y publica los eventos **StockDescontado** o **AlertaStockCritico**
+3. **ms-distribucion** se suscribe a los eventos **StockDescontado** y **AlertaStockCritico**
+4. **ms-distribucion** consulta los datos de los empleados en **ms-rrhh**
+5. **ms-distribucion** publica el evento **EntregaConfirmada** en **ms-inventario**
+
+
+## Diagrama de Flujo de Eventos
+
+```mermaid
+sequenceDiagram
+    participant ms_distribucion
+    participant ms_inventario
+    participant ms_rrhh
+
+    ms_distribucion->>ms_inventario: EntregaRegistrada
+    ms_inventario->>ms_distribucion: StockDescontado
+    ms_inventario->>ms_distribucion: AlertaStockCritico
+    ms_distribucion->>ms_rrhh: Consulta Empleado
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_rrhh-->>ms_distribucion: Datos Empleado
+    ms_inventario-->>ms_distribucion: Stock Actualizado
+    ms_inventario-->>ms_distribucion: Alerta Resuelta
+
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_inventario-->>ms_distribucion: Entrega Confirmada
+    ms_distribucion->>ms_rrhh: Consulta Empleado
+    ms_rrhh-->>ms_distribucion: Datos Empleado
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_inventario-->>ms_distribucion: Entrega Confirmada
+    
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_inventario-->>ms_distribucion: Entrega Confirmada
+    ms_distribucion->>ms_rrhh: Consulta Empleado
+    ms_rrhh-->>ms_distribucion: Datos Empleado
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_inventario-->>ms_distribucion: Entrega Confirmada
+
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_inventario-->>ms_distribucion: Entrega Confirmada
+    ms_distribucion->>ms_rrhh: Consulta Empleado
+    ms_rrhh-->>ms_distribucion: Datos Empleado
+    ms_distribucion->>ms_inventario: EntregaConfirmada
+    ms_inventario-->>ms_distribucion: Entrega Confirmada

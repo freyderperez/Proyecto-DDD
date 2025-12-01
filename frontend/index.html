@@ -1,94 +1,218 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>DelegInsumos — Dashboard</title>
-  <link rel="stylesheet" href="./css/dashboard.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DelegInsumos - Dashboard</title>
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">DelegInsumos</div>
-      <nav class="menu">
-        <a href="#" class="menu-item active" data-route="dashboard">Dashboard</a>
-        <a href="./insumos.html" class="menu-item" data-route="insumos">Gestión de Insumos</a>
-        <a href="./empleados.html" class="menu-item" data-route="empleados">Gestión de Empleados</a>
-        <a href="./entregas.html" class="menu-item" data-route="entregas">Registro de Entregas</a>
-      </nav>
-      <div class="sidebar-footer">v1.0</div>
-    </aside>
+  <header class="dashboard-header">
+    <h1>Dashboard</h1>
+  </header>
 
-    <main class="main">
-      <header class="topbar">
-        <h1 id="page-title">Dashboard</h1>
-        <div class="top-actions">
-          <button id="refreshBtn" class="btn">Refrescar</button>
+  <main class="dashboard-main">
+    <!-- Sección de Métricas -->
+    <section class="metrics-section">
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <h3>Cantidad Insumos</h3>
+          <p id="valor-insumos">—</p>
         </div>
-      </header>
-
-      <section class="content">
-        <!-- Cards -->
-        <div class="cards" id="cards">
-          <div class="card">
-            <div class="card-body">
-              <div class="card-title">Valor Insumos</div>
-              <div class="card-value" id="card-valor-insumos">—</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <div class="card-title">Empleados Activos</div>
-              <div class="card-value" id="card-empleados">—</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <div class="card-title">Entregas Hoy</div>
-              <div class="card-value" id="card-entregas">—</div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <div class="card-title">Alertas Stock</div>
-              <div class="card-value" id="card-alertas">—</div>
-            </div>
-          </div>
+        <div class="metric-card">
+          <h3>Empleados Activos</h3>
+          <p id="empleados-activos">—</p>
         </div>
-
-        <!-- Table area -->
-        <div class="panel">
-          <div class="panel-header">
-            <h2>Insumos</h2>
-            <div>
-              <button id="newInsumoBtn" class="btn btn-primary">Nuevo Insumo</button>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-            <table class="table" id="insumosTable">
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Categoría</th>
-                  <th>Stock Actual</th>
-                  <th>Stock Mín</th>
-                  <th>Stock Máx</th>
-                  <th>Estado</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody id="insumosTbody">
-                <!-- filas dinámicas -->
-              </tbody>
-            </table>
-          </div>
+        <div class="metric-card">
+          <h3>Entregas Hoy</h3>
+          <p id="entregas-hoy">—</p>
         </div>
+        <div class="metric-card">
+          <h3>Alertas Stock</h3>
+          <p id="alertas-stock">—</p>
+        </div>
+      </div>
+    </section>
 
-      </section>
-    </main>
+    <!-- Sección Insumos -->
+    <section class="data-section">
+      <div class="section-header">
+        <h2>Insumos</h2>
+        <button class="btn-primary" id="nuevo-insumo-btn">Nuevo Insumo</button>
+      </div>
+      <div class="table-container">
+        <table id="insumos-table">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Categoría</th>
+              <th>Stock Actual</th>
+              <th>Stock Mín</th>
+              <th>Stock Máx</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="insumos-tbody">
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sección Empleados -->
+    <section class="data-section">
+      <div class="section-header">
+        <h2>Empleados</h2>
+        <button class="btn-primary" id="nuevo-empleado-btn">Nuevo Empleado</button>
+      </div>
+      <div class="table-container">
+        <table id="empleados-table">
+          <thead>
+            <tr>
+              <th>Cédula</th>
+              <th>Estado</th>
+              <th>Nombre Completo</th>
+              <th>Cargo</th>
+              <th>Departamento</th>
+              <th>Email</th>
+              <th>Teléfono</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="empleados-tbody">
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Sección Entregas -->
+    <section class="data-section">
+      <div class="section-header">
+        <h2>Entregas</h2>
+        <button class="btn-primary" id="nueva-entrega-btn">Nueva Entrega</button>
+      </div>
+      <div class="table-container">
+        <table id="entregas-table">
+          <thead>
+            <tr>
+              <th>Empleado</th>
+              <th>Insumo</th>
+              <th>Cantidad</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="entregas-tbody">
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modales -->
+  <!-- Modal Insumo -->
+  <div id="insumo-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2 id="insumo-modal-title">Nuevo Insumo</h2>
+      <form id="insumo-form">
+        <div class="form-group">
+          <label for="insumo-nombre">Nombre:</label>
+          <input type="text" id="insumo-nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="insumo-categoria">Categoría:</label>
+          <input type="text" id="insumo-categoria" required>
+        </div>
+        <div class="form-group">
+          <label for="insumo-stock-actual">Stock Actual:</label>
+          <input type="number" id="insumo-stock-actual" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="insumo-stock-min">Stock Mínimo:</label>
+          <input type="number" id="insumo-stock-min" min="0" required>
+        </div>
+        <div class="form-group">
+          <label for="insumo-stock-max">Stock Máximo:</label>
+          <input type="number" id="insumo-stock-max" min="0" required>
+        </div>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </form>
+    </div>
   </div>
 
-  <script src="./js/dashboard.js"></script>
+  <!-- Modal Empleado -->
+  <div id="empleado-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2 id="empleado-modal-title">Nuevo Empleado</h2>
+      <form id="empleado-form">
+        <div class="form-group">
+          <label for="empleado-cedula">Cédula:</label>
+          <input type="text" id="empleado-cedula" required>
+        </div>
+        <div class="form-group">
+          <label for="empleado-estado">Estado:</label>
+          <select id="empleado-estado" required>
+            <option value="activo">Activo</option>
+            <option value="inactivo">Inactivo</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="empleado-nombre">Nombre Completo:</label>
+          <input type="text" id="empleado-nombre" required>
+        </div>
+        <div class="form-group">
+          <label for="empleado-cargo">Cargo:</label>
+          <input type="text" id="empleado-cargo" required>
+        </div>
+        <div class="form-group">
+          <label for="empleado-departamento">Departamento:</label>
+          <input type="text" id="empleado-departamento" required>
+        </div>
+        <div class="form-group">
+          <label for="empleado-email">Email:</label>
+          <input type="email" id="empleado-email" required>
+        </div>
+        <div class="form-group">
+          <label for="empleado-telefono">Teléfono:</label>
+          <input type="text" id="empleado-telefono" required>
+        </div>
+        <button type="submit" class="btn-primary">Guardar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Entrega -->
+  <div id="entrega-modal" class="modal">
+    <div class="modal-content">
+      <span class="modal-close">&times;</span>
+      <h2>Nueva Entrega</h2>
+      <form id="entrega-form">
+        <div class="form-group">
+          <label for="entrega-empleado">Empleado:</label>
+          <select id="entrega-empleado" required>
+            <!-- Opciones dinámicas -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="entrega-insumo">Insumo:</label>
+          <select id="entrega-insumo" required>
+            <!-- Opciones dinámicas -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="entrega-cantidad">Cantidad:</label>
+          <input type="number" id="entrega-cantidad" min="1" required>
+        </div>
+        <button type="submit" class="btn-primary">Crear</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/main.js"></script>
 </body>
 </html>

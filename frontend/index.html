@@ -1,28 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sistema DDD</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>DelegInsumos — Dashboard</title>
+  <link rel="stylesheet" href="./css/dashboard.css" />
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="insumos.html">Insumos</a></li>
-      <li><a href="empleados.html">Empleados</a></li>
-      <li><a href="entregas.html">Entregas</a></li>
-    </ul>
-  </nav>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">DelegInsumos</div>
+      <nav class="menu">
+        <a href="#" class="menu-item active" data-route="dashboard">Dashboard</a>
+        <a href="./insumos.html" class="menu-item" data-route="insumos">Gestión de Insumos</a>
+        <a href="./empleados.html" class="menu-item" data-route="empleados">Gestión de Empleados</a>
+        <a href="./entregas.html" class="menu-item" data-route="entregas">Registro de Entregas</a>
+      </nav>
+      <div class="sidebar-footer">v1.0</div>
+    </aside>
 
-  <div class="container">
-    <h1>Bienvenido al Sistema DDD</h1>
-    <p>Selecciona una opción del menú para gestionar insumos, empleados o entregas.</p>
+    <main class="main">
+      <header class="topbar">
+        <h1 id="page-title">Dashboard</h1>
+        <div class="top-actions">
+          <button id="refreshBtn" class="btn">Refrescar</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <!-- Cards -->
+        <div class="cards" id="cards">
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Valor Insumos</div>
+              <div class="card-value" id="card-valor-insumos">—</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Empleados Activos</div>
+              <div class="card-value" id="card-empleados">—</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Entregas Hoy</div>
+              <div class="card-value" id="card-entregas">—</div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body">
+              <div class="card-title">Alertas Stock</div>
+              <div class="card-value" id="card-alertas">—</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table area -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Insumos</h2>
+            <div>
+              <button id="newInsumoBtn" class="btn btn-primary">Nuevo Insumo</button>
+            </div>
+          </div>
+
+          <div class="table-wrap">
+            <table class="table" id="insumosTable">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Categoría</th>
+                  <th>Stock Actual</th>
+                  <th>Stock Mín</th>
+                  <th>Stock Máx</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="insumosTbody">
+                <!-- filas dinámicas -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+    </main>
   </div>
 
-  <div id="toast-container"></div>
-
-  <script src="js/api.js"></script>
+  <script src="./js/dashboard.js"></script>
 </body>
 </html>

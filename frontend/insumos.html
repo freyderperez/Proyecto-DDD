@@ -5,18 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Insumos - Sistema DDD</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
-  <nav>
-    <ul>
-      <li><a href="index.html">Inicio</a></li>
-      <li><a href="insumos.html">Insumos</a></li>
-      <li><a href="empleados.html">Empleados</a></li>
-      <li><a href="entregas.html">Entregas</a></li>
-    </ul>
-  </nav>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">DelegInsumos</div>
+      <nav class="menu">
+        <a href="index.html" class="menu-item">Dashboard</a>
+        <a href="insumos.html" class="menu-item active">Gestión de Insumos</a>
+        <a href="empleados.html" class="menu-item">Gestión de Empleados</a>
+        <a href="entregas.html" class="menu-item">Registro de Entregas</a>
+      </nav>
+      <div class="sidebar-footer">v1.0</div>
+    </aside>
 
-  <div class="container">
+    <main class="main">
+      <header class="topbar">
+        <h1 id="page-title">Gestión de Insumos</h1>
+      </header>
+
+      <section class="content">
     <h1>Insumos</h1>
     <button class="btn" onclick="openCreateModal()">Crear Insumo</button>
     <div class="table-container">
@@ -68,6 +77,12 @@
         <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
       </form>
     </div>
+  </div>
+
+        </div>
+
+      </section>
+    </main>
   </div>
 
   <div id="toast-container"></div>

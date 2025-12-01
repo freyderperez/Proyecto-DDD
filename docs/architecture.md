@@ -60,14 +60,40 @@ This architecture aligns with the subdomain classifications, treating inventory 
 
 ## Context Map
 
+- Frontend → ms-gateway = Customer
+- ms-gateway → Microservices = Proxy/Facade
 - ms-distribucion → ms-inventario = Customer/Supplier
 - ms-distribucion → ms-rrhh = Conformist
 - ms-inventario offers inventory operations as an open host service
+
+## Frontend Architecture
+
+The frontend is a unified dashboard application built with modern web technologies:
+
+- **Technology Stack**: HTML5, CSS3, JavaScript ES6+
+- **Architecture Pattern**: Single Page Application (SPA) with modular JavaScript
+- **Communication**: Direct API calls to ms-gateway using Fetch API
+- **State Management**: In-memory state with DOM manipulation
+- **UI Components**: Semantic HTML with CSS Grid/Flexbox layouts
+- **Responsiveness**: Mobile-first design with media queries
+
+### Frontend Features
+
+- **Unified Dashboard**: Single view consolidating all business operations
+- **Real-time Metrics**: Live calculation of KPIs from API data
+- **CRUD Operations**: Full create, read, update, delete for all entities
+- **Visual States**: Color-coded table rows based on entity states
+- **Form Validation**: Client-side validation with server-side confirmation
+- **Error Handling**: User-friendly error messages and loading states
 
 ## Diagrama de Contexto
 
 ```mermaid
 graph TD
+D[Frontend/Dashboard] -->|API Requests| E[ms-gateway]
+E -->|Proxy| A[ms-inventario]
+E -->|Proxy| B[ms-distribucion]
+E -->|Proxy| C[ms-rrhh]
 A[ms-inventario] -->|StockReservado/FalloSinStock| B[ms-distribucion]
 B -->|EntregaSolicitada| A
 C[ms-rrhh] -->|Empleado data| B

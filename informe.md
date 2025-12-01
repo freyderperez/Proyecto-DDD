@@ -298,10 +298,52 @@ class EstadoEmpleado(str):
         return super().__new__(cls, value)
 ```
 
+## Frontend - Dashboard Unificado
+
+El frontend ha sido completamente refactorizado en un dashboard unificado desarrollado con tecnologías web modernas (HTML5, CSS3, JavaScript ES6+). Esta interfaz de usuario proporciona una experiencia cohesiva para la gestión completa del sistema DelegInsumos.
+
+### Características Principales
+
+#### Vista Unificada
+- **Dashboard Principal**: Una sola página que consolida todas las funcionalidades operativas.
+- **Métricas en Tiempo Real**: Cards con indicadores clave (Valor Insumos, Empleados Activos, Entregas Hoy, Alertas Stock).
+- **Navegación Simplificada**: Eliminación de navegación lateral compleja, enfocada en eficiencia operativa.
+
+#### Gestión de Recursos
+- **Insumos**: Visualización de stock con estados coloreados, CRUD completo, actualización manual de stock.
+- **Empleados**: Gestión de personal con toggle de estado activo/inactivo, colores por estado.
+- **Entregas**: Creación y confirmación de entregas con validación automática de stock disponible.
+
+#### Interfaz de Usuario Avanzada
+- **Estados Visuales**: Sistema de colores en filas de tablas para identificación rápida de estados:
+  - Insumos: Rojo (sin stock), Naranja (crítico), Verde (OK), Azul (exceso)
+  - Empleados: Verde (activo), Gris (inactivo)
+  - Entregas: Amarillo (pendiente), Verde (confirmada)
+- **Modales Interactivos**: Formularios emergentes para creación y edición con validaciones.
+- **Responsive Design**: Adaptable a diferentes tamaños de pantalla.
+- **UX Moderna**: Animaciones sutiles, feedback visual y navegación intuitiva.
+
+#### Integración Backend
+- **API Gateway**: Comunicación directa con el gateway para todas las operaciones CRUD.
+- **Validaciones del Lado Cliente**: Verificación de stock antes de confirmar entregas.
+- **Actualización Automática**: Reducción de stock al confirmar entregas exitosamente.
+
+### Arquitectura Frontend
+
+- **HTML Semántico**: Estructura clara con secciones lógicas.
+- **CSS Modular**: Estilos organizados con variables CSS para consistencia.
+- **JavaScript Asíncrono**: Fetch API para comunicación con backend, manejo de promesas.
+- **Separación de Responsabilidades**: Lógica de UI separada de lógica de negocio.
+
 ## Conclusiones
 
-La implementación del proyecto "DelegInsumos" utilizando Domain-Driven Design y arquitectura de microservicios demuestra una aproximación robusta y escalable para el desarrollo de sistemas complejos. Al separar claramente los bounded contexts y definir aggregates, entities, value objects y domain events, el sistema logra una alta cohesión dentro de cada dominio y bajo acoplamiento entre servicios.
+La implementación completa del proyecto "DelegInsumos" combina Domain-Driven Design en el backend con una interfaz de usuario moderna y funcional en el frontend. La arquitectura de microservicios asegura escalabilidad y mantenibilidad, mientras que el dashboard unificado proporciona una experiencia de usuario eficiente y visualmente atractiva.
 
-Los beneficios clave incluyen la capacidad de escalar servicios independientemente, facilitar el mantenimiento y testing, y permitir la evolución autónoma de cada parte del sistema. La comunicación asíncrona vía eventos asegura que los servicios puedan reaccionar a cambios en otros dominios sin dependencias directas, mejorando la resiliencia general.
+Los beneficios clave incluyen:
+- **Escalabilidad Independiente**: Servicios backend escalan según necesidades específicas.
+- **Mantenibilidad Mejorada**: Separación clara entre frontend y backend.
+- **Experiencia de Usuario**: Dashboard intuitivo con feedback visual en tiempo real.
+- **Validaciones Robustas**: Verificaciones de negocio tanto en frontend como backend.
+- **Preparación para Futuro**: Arquitectura preparada para expansiones y nuevas funcionalidades.
 
-Esta arquitectura no solo alinea el código con el dominio del negocio, sino que también prepara el sistema para futuras expansiones, como la adición de nuevos servicios o la integración con sistemas externos. En resumen, el proyecto ejemplifica las mejores prácticas de DDD y microservicios, proporcionando una base sólida para aplicaciones empresariales distribuidas.
+Esta implementación demuestra las mejores prácticas de desarrollo full-stack, alineando el código con el dominio del negocio y proporcionando una base sólida para aplicaciones empresariales distribuidas.

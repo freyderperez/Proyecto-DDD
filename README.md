@@ -1,39 +1,52 @@
-# Proyecto DDD
+# Proyecto DDD - DelegInsumos
 
-This project implements a microservices architecture using Domain-Driven Design (DDD) principles. It consists of several services including inventory management (ms-inventario), human resources (ms-rrhh), distribution (ms-distribucion), and an API gateway (ms-gateway).
+Este proyecto implementa una arquitectura de microservicios utilizando principios de Domain-Driven Design (DDD). Consiste en varios servicios incluyendo gestión de inventario (ms-inventario), recursos humanos (ms-rrhh), distribución (ms-distribucion), puerta de enlace API (ms-gateway) y un frontend unificado.
 
-## Prerequisites
+## Prerrequisitos
 
 - Docker
 - Docker Compose
 
-## Startup Instructions
+## Instrucciones de Inicio
 
-1. Clone the repository to your local machine.
-2. Navigate to the project directory.
-3. Run the following command to start all services:
+1. Clona el repositorio en tu máquina local.
+2. Navega al directorio del proyecto.
+3. Ejecuta el siguiente comando para iniciar todos los servicios:
 
    ```bash
    make up
    ```
 
-4. The services will be available at the following endpoints:
+4. Los servicios estarán disponibles en los siguientes endpoints:
+   - Frontend (Dashboard): http://localhost:8080
    - API Gateway: http://localhost:8000
    - Inventory Service: http://localhost:8001
-   - HR Service: http://localhost:8002
-   - Distribution Service: http://localhost:8003
+   - Distribution Service: http://localhost:8002
+   - HR Service: http://localhost:8003
    - RabbitMQ Management Interface: http://localhost:15672
 
-## Additional Commands
+## Comandos Adicionales
 
-- View logs for all services: `make logs`
-- Stop services: `docker-compose down`
+- Ver logs de todos los servicios: `make logs`
+- Detener servicios: `docker-compose down`
 
-## Architecture
+## Arquitectura
 
-The project follows DDD with clear separation of concerns:
-- **Domain Layer**: Contains entities, value objects, domain services, and events.
-- **Application Layer**: Contains use cases and application services.
-- **Infrastructure Layer**: Contains repositories, database models, and external integrations.
+El proyecto sigue DDD con clara separación de responsabilidades:
+- **Capa de Dominio**: Contiene entidades, objetos de valor, servicios de dominio y eventos.
+- **Capa de Aplicación**: Contiene casos de uso y servicios de aplicación.
+- **Capa de Infraestructura**: Contiene repositorios, modelos de base de datos e integraciones externas.
 
-Services communicate via RabbitMQ for asynchronous messaging and share a PostgreSQL database.
+Los servicios se comunican vía RabbitMQ para mensajería asíncrona y comparten una base de datos PostgreSQL.
+
+## Frontend
+
+El frontend es un dashboard unificado desarrollado con HTML, CSS y JavaScript vanilla. Incluye:
+
+- **Vista Unificada**: Una sola página con métricas en tiempo real y gestión completa de insumos, empleados y entregas.
+- **Funcionalidades CRUD**: Crear, leer, actualizar y eliminar para todos los recursos.
+- **Estados Visuales**: Colores en filas de tablas según estado (verde para OK/activo, rojo para crítico, etc.).
+- **Validaciones**: Confirmación de entregas con verificación de stock disponible.
+- **Interfaz Moderna**: Diseño responsive con modales para formularios.
+
+El dashboard se conecta directamente al API Gateway para todas las operaciones.
